@@ -18,7 +18,6 @@ namespace NetSecondlab_2b_
         {
             InitializeComponent();
         }
-
         private void savePointBtn_Click(object sender, EventArgs e)
         {
             i = i + 1;
