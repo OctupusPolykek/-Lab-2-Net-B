@@ -123,6 +123,8 @@ namespace NetSecondlab_2b_
 
         private void RndFillBtn_Click(object sender, EventArgs e)
         {
+            ResetBtn.Enabled = true;
+
             triangls = new Triangls(4);
 
             Point point1 = new Point("A", 2, 3);
