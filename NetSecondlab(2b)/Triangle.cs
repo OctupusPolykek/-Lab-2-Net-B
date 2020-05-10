@@ -18,7 +18,7 @@ namespace NetSecondlab_2b_
         private Point vector2;
         private Point vector3;
 
-        public Triangle(int num,Point p1, Point p2, Point p3)
+        public Triangle(int num, Point p1, Point p2, Point p3)
         {
             number = num;
             point1 = new Point();
@@ -78,10 +78,10 @@ namespace NetSecondlab_2b_
                             + "---------------\n" + "Вектора:\n" + vector1.ToString() + "\n" + vector2.ToString() + "\n" + vector3.ToString() + "\n"
                                 + "---------------\n" + "Длины сторон:\n" + vector1.Name + " : " + vector1.VectorLnt() + "\n" + vector2.Name + " : " + vector2.VectorLnt() + "\n" + vector3.Name + " : " + vector3.VectorLnt() + "\n"
                                     + "---------------\n" + "Углы треугольника (cos):\n" + point1.Name + " : " + vector1.VectorAngl(vector3) + "\n" + point2.Name + " : " + vector2.VectorAngl(vector1) + "\n" + point3.Name + " : " + vector3.VectorAngl(vector2) + "\n"
-                                        + "---------------\n" + "Площадь треугольника:\n" + this.getP() + "\n"
+                                        + "---------------\n" + "Периметр треугольника:\n" + this.getP() + "\n"
                                             + "---------------\n" + "Площадь треугольника:\n" + this.getS() + "\n" + "---------------\n";
             }
-            else 
+            else
             {
                 return "\nТреугольника не существует!!!\n";
             }

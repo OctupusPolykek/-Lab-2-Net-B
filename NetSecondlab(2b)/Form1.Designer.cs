@@ -56,6 +56,8 @@
             this.TriangleNumBox = new System.Windows.Forms.TextBox();
             this.TabCosBtn = new System.Windows.Forms.Button();
             this.ResetBtn = new System.Windows.Forms.Button();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.Triengle)).BeginInit();
             this.SuspendLayout();
             // 
@@ -323,6 +325,14 @@
             this.ResetBtn.UseVisualStyleBackColor = true;
             this.ResetBtn.Click += new System.EventHandler(this.ResetBtn_Click_1);
             // 
+            // saveFileDialog1
+            // 
+            this.saveFileDialog1.FileName = "6";
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -392,6 +402,8 @@
         private System.Windows.Forms.TextBox TriangleNumBox;
         private System.Windows.Forms.Button TabCosBtn;
         private System.Windows.Forms.Button ResetBtn;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,11 +18,57 @@ namespace NetSecondlab_2b_
         public Form1()
         {
             InitializeComponent();
+
+            var load = MessageBox.Show("Хотите загрузить значения?", "Загрузка", MessageBoxButtons.YesNo);
+            if (load == DialogResult.Yes)
+            {
+                if (openFileDialog1.ShowDialog() == DialogResult.Cancel)
+                    return;
+                string path = openFileDialog1.FileName;
+                string ans;
+                int t = 0;
+
+                using (BinaryReader reader = new BinaryReader(File.Open(path, FileMode.Open)))//Сколько треугольников
+                {
+                    while (reader.PeekChar() > -1)
+                    {
+                        int num = reader.ReadInt32();
+                        Point point1 = new Point(reader.ReadString(), reader.ReadInt32(), reader.ReadInt32());
+                        Point point2 = new Point(reader.ReadString(), reader.ReadInt32(), reader.ReadInt32());
+                        Point point3 = new Point(reader.ReadString(), reader.ReadInt32(), reader.ReadInt32());
+                        double p = reader.ReadDouble();
+                        double s = reader.ReadDouble();
+                        bool isOrt = reader.ReadBoolean();
+                        t++;
+                    }
+                }
+
+                triangls = new Triangls(t);
+
+                using (BinaryReader reader = new BinaryReader(File.Open(path, FileMode.Open)))//Инициализация
+                {
+                    while (reader.PeekChar() > -1)
+                    {
+                        int num = reader.ReadInt32();
+                        Point point1 = new Point(reader.ReadString(), reader.ReadInt32(), reader.ReadInt32());
+                        Point point2 = new Point(reader.ReadString(), reader.ReadInt32(), reader.ReadInt32());
+                        Point point3 = new Point(reader.ReadString(), reader.ReadInt32(), reader.ReadInt32());
+                        double p = reader.ReadDouble();
+                        double s = reader.ReadDouble();
+                        bool isOrt = reader.ReadBoolean();
+
+                        triangls.addTriangle(num, point1, point2, point3, p, s, isOrt);
+                    }
+                }
+                richTextTriengleInfo.AppendText(triangls.ShowAllTriangls());
+                if (t > 1)
+                    richTextTriengleInfo.AppendText(triangls.ReturnResult());
+            }
         }
         private void savePointBtn_Click(object sender, EventArgs e)
         {
             i = i + 1;
-            try 
+            try
             {
                 Point point1 = new Point(x2NameBox.Text, Int32.Parse(x2TextBox.Text), Int32.Parse(y2TextBox.Text));
                 Point point3 = new Point(x3NameBox.Text, Int32.Parse(x3TextBox.Text), Int32.Parse(y3TextBox.Text));
@@ -34,7 +81,7 @@ namespace NetSecondlab_2b_
                 TriangleNumBox.AppendText(i + "");
 
                 if (triangle.IsTriangle())
-                    triangls.addTriangle(i, triangle.getS(), triangle.IsOrthogonal());
+                    triangls.addTriangle(i, point1, point2, point3, triangle.getP(), triangle.getS(), triangle.IsOrthogonal());
                 else
                 {
                     i = i - 1;
@@ -48,7 +95,7 @@ namespace NetSecondlab_2b_
 
                 richTextTriengleInfo.AppendText(triangle.ToString());
 
-                if (i == Int32.Parse(AmoutTextBox.Text))
+                if (i >= Int32.Parse(AmoutTextBox.Text))
                 {
                     x1NameBox.Enabled = false;
                     x1TextBox.Enabled = false;
@@ -64,8 +111,8 @@ namespace NetSecondlab_2b_
 
                     savePointBtn.Enabled = false;
                     TriangleNumBox.Enabled = false;
-
-                    richTextTriengleInfo.AppendText(triangls.ReturnResult());
+                    if (i > 1)
+                        richTextTriengleInfo.AppendText(triangls.ReturnResult());
                 }
             }
             catch (Exception exc)
@@ -112,7 +159,7 @@ namespace NetSecondlab_2b_
 
                 ResetBtn.Enabled = true;
 
-                TriangleNumBox.AppendText(1 + "");
+                TriangleNumBox.AppendText(i + "");
             }
             catch (Exception exc)
             {
@@ -132,7 +179,7 @@ namespace NetSecondlab_2b_
 
             Triangle triangle1 = new Triangle(1, point1, point2, point3);
 
-            triangls.addTriangle(1, triangle1.getS(), triangle1.IsOrthogonal());
+            triangls.addTriangle(1, point1, point2, point3, triangle1.getP(), triangle1.getS(), triangle1.IsOrthogonal());
 
             richTextTriengleInfo.AppendText(triangle1.ToString());
 
@@ -142,7 +189,7 @@ namespace NetSecondlab_2b_
 
             Triangle triangle2 = new Triangle(2, point4, point5, point6);
 
-            triangls.addTriangle(2, triangle2.getS(), triangle2.IsOrthogonal());
+            triangls.addTriangle(2, point4, point5, point6, triangle2.getP(), triangle2.getS(), triangle2.IsOrthogonal());
 
             richTextTriengleInfo.AppendText(triangle2.ToString());
 
@@ -152,7 +199,7 @@ namespace NetSecondlab_2b_
 
             Triangle triangle3 = new Triangle(3, point7, point8, point9);
 
-            triangls.addTriangle(3, triangle3.getS(), triangle3.IsOrthogonal());
+            triangls.addTriangle(3, point7, point8, point9, triangle3.getP(), triangle3.getS(), triangle3.IsOrthogonal());
 
             richTextTriengleInfo.AppendText(triangle3.ToString());
 
@@ -162,7 +209,7 @@ namespace NetSecondlab_2b_
 
             Triangle triangle4 = new Triangle(4, point10, point11, point12);
 
-            triangls.addTriangle(4, triangle4.getS(), triangle4.IsOrthogonal());
+            triangls.addTriangle(4, point10, point11, point12, triangle4.getP(), triangle4.getS(), triangle4.IsOrthogonal());
 
             richTextTriengleInfo.AppendText(triangle4.ToString());
 
@@ -171,9 +218,22 @@ namespace NetSecondlab_2b_
         }
         private void ExitBtn_Click(object sender, EventArgs e)
         {
+            var save = MessageBox.Show("Хотите сохранить значения?", "Сохранение", MessageBoxButtons.YesNo);
+            if (save == DialogResult.Yes)
+            {
+                if (saveFileDialog1.ShowDialog() == DialogResult.Cancel)
+                    return;
+
+                // получаем выбранный файл
+                string filename = saveFileDialog1.FileName;
+
+                triangls.saveTo(filename);
+
+                MessageBox.Show("Файл сохранен");
+            }
             this.Close();
         }
-        private void button1_Click_1(object sender, EventArgs e)
+    private void button1_Click_1(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start("https://www.webmath.ru/poleznoe/table_cosinus.php");
         }
